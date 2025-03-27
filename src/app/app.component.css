@@ -1,0 +1,19 @@
+.logo {
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 1rem;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+main {
+    padding: 2rem;
+}
+
+mat-toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}

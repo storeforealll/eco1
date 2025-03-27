@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<mat-table [dataSource]="cartItems" class="mat-elevation-z8 responsive-table" matSort (matSortChange)="sortData($event)">
+    <!-- Product Column -->
+    <ng-container matColumnDef="product">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Product</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <div class="product-info">
+                <img [src]="item.thumbnail || 'assets/placeholder-product.jpg'" [alt]="item.title" (error)="handleImageError($event)" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-title">{{ item.title }}</h3>
+                    <p class="product-sku">SKU: {{ item.id }}</p>
+
+                </div>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Price Column -->
+    <ng-container matColumnDef="price">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <span class="price">{{ item.price | currency:'USD':'symbol':'1.2-2' }}</span>
+
+        </mat-cell>
+    </ng-container>
+
+    <!-- Quantity Column -->
+    <ng-container matColumnDef="quantity">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <div class="quantity-control">
+                <button mat-icon-button (click)="updateQuantity(item.id, item.quantity - 1)" [disabled]="item.quantity <= 1" aria-label="Decrease quantity">
+          <mat-icon>remove</mat-icon>
+        </button>
+                <span class="quantity-display">{{ item.quantity }}</span>
+                <button mat-icon-button (click)="updateQuantity(item.id, item.quantity + 1)" [disabled]="item.quantity >= item.stock" aria-label="Increase quantity" [matTooltip]="item.quantity >= item.stock ? 'Maximum stock reached' : ''">
+          <mat-icon>add</mat-icon>
+        </button>
+            </div>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Total Column -->
+    <ng-container matColumnDef="total">
+        <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <span class="total-price">
+        {{ item.price * item.quantity | currency:'USD':'symbol':'1.2-2' }}
+      </span>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+        <mat-header-cell *matHeaderCellDef>Actions</mat-header-cell>
+        <mat-cell *matCellDef="let item">
+            <button mat-icon-button color="warn" (click)="removeItem(item.id)" aria-label="Remove item from cart" matTooltip="Remove from cart">
+        <mat-icon>delete_forever</mat-icon>
+      </button>
+        </mat-cell>
+    </ng-container>
+
+    <!-- Loading Row -->
+    <ng-container matColumnDef="loading">
+        <mat-footer-cell *matFooterCellDef colspan="5">
+            <div class="loading-container">
+                <mat-spinner diameter="40"></mat-spinner>
+                <p>Loading cart items...</p>
+            </div>
+        </mat-footer-cell>
+    </ng-container>
+
+    <!-- Empty Row -->
+    <ng-container matColumnDef="empty">
+        <mat-footer-cell *matFooterCellDef colspan="5">
+            <div class="empty-cart">
+                <mat-icon>remove_shopping_cart</mat-icon>
+
+                <a mat-raised-button color="primary" routerLink="/">Continue Shopping</a>
+            </div>
+        </mat-footer-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;" [@rowAnimation]="row"></mat-row>
+
+</mat-table>

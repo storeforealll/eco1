@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<div class="container">
+    <h1 class="page-title">Our Products</h1>
+
+    <div *ngIf="!products.length" class="loading-spinner">
+        <mat-spinner diameter="50"></mat-spinner>
+    </div>
+
+    <div class="product-grid">
+        <mat-card *ngFor="let product of products" class="product-card">
+            <img mat-card-image [src]="product.thumbnail" [alt]="product.title">
+            <mat-card-content>
+                <h2 class="product-title">{{ product.title }}</h2>
+                <p class="product-category">{{ product.category }}</p>
+                <p class="product-price">{{ product.price | currency }}</p>
+                <div class="rating">
+                    <span class="stars">{{ product.rating }} ★</span>
+                    <span class="stock">Stock: {{ product.stock }}</span>
+                </div>
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="viewDetails(product.id)">
+            DETAILS
+          </button>
+                <button mat-raised-button color="accent" (click)="addToCart(product)" [disabled]="product.stock === 0">
+            {{ product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART' }}
+          </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
+<!-- Add after product grid -->
+<div class="pagination-controls">
+    <button mat-raised-button (click)="prevPage()" [disabled]="currentPage === 1">
+    Previous
+  </button>
+
+    <span class="page-info">
+    Page {{ currentPage }} of {{ totalPages() }}
+  </span>
+
+    <button mat-raised-button (click)="nextPage()" [disabled]="currentPage * pageSize >= totalProducts">
+    Next
+  </button>
+</div>
